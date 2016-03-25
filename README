@@ -1,0 +1,3 @@
+This project uses the Keras Python library to implement an RNN that learns from datasets produced by the multicap script in MouseInputCapture.
+
+

@@ -17,8 +17,8 @@ from keras.layers import Input, Embedding, Merge
 import csv
 import keras
 
-infile = open('../../../csv-datasets/newinput.csv', 'r')
-infile2 = open('../../../csv-datasets/set2.csv', 'r')
+infile = open('datasets/newinput.csv', 'r')
+infile2 = open('datasets/set2.csv', 'r')
 
 instream = csv.reader(infile)
 instream2 = csv.reader(infile2)

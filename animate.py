@@ -1,3 +1,7 @@
+'''
+A program to animate a cursor movement dataset. 
+'''
+
 import numpy as np
 import matplotlib
 #matplotlib.use("Agg")
@@ -7,7 +11,7 @@ import csv
 
 batch_size = 100
 
-infile = open('../../../csv-datasets/newinput.csv', 'r')
+infile = open('datasets/newinput.csv', 'r')
 
 instream = csv.reader(infile)
 

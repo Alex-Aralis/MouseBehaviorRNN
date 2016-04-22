@@ -1,6 +1,8 @@
-'''Example script showing how to use stateful RNNs
-to model long sequences efficiently.
 '''
+This code creates the RNN and then displays result as a 3d
+model and an animation of the cursor movemnt.
+'''
+
 from __future__ import print_function
 import numpy as np
 import matplotlib as mpl

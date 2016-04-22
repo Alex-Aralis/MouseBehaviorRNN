@@ -2,4 +2,7 @@ This project uses the Keras Python library to implement an RNN that learns from 
 
 In order to run this program the Keras module must be installed in the Python environment used for interpretation.
 
+The grow2.py is the script used to generate the 3d graphs and cursor movement animations for my project.
+
+The data-sets are not stored in this repository.
 

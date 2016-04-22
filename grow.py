@@ -243,7 +243,7 @@ lastrow = np.array([0,0,0])
 summed_prediction = list()
 
 for row in predicted_output:
-    lastrow = np.add(np.concat((abs(row[0]), row[1], row[2])),lastrow)
+    lastrow = np.add(np.append((abs(row[0]), row[1], row[2])),lastrow)
     summed_prediction.append(list(lastrow))
 
 summed_prediction = np.array(summed_prediction)

@@ -1,9 +1,8 @@
+'''Example script showing how to use stateful RNNs
+to model long sequences efficiently.
 '''
-This code creates the RNN and then displays result as a 3d
-model and an animation of the cursor movemnt.
-'''
-
 from __future__ import print_function
+import math;
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -17,8 +16,8 @@ from keras.layers import Input, Embedding, Merge
 import csv
 import keras
 
-infile = open('datasets/newinput.csv', 'r')
-infile2 = open('datasets/set2.csv', 'r')
+infile = open('../../../csv-datasets/newinput.csv', 'r')
+infile2 = open('../../../csv-datasets/set2.csv', 'r')
 
 instream = csv.reader(infile)
 instream2 = csv.reader(infile2)
@@ -30,30 +29,27 @@ def gen_data(instream, batch_size):
 
     raw_data = []
     for row in instream:
-        raw_data.append(row)
+        raw_data.append(((math.log(float(row[0])), float(row[4]), float(row[5])),))
 
     data_size = len(raw_data) - len(raw_data) % batch_size
 
-    data = []
+    data = raw_data[0:data_size]
     
-    for row in raw_data:
-        data.append(((float(row[0]),float(row[4]),float(row[5])),))
-
-    data = data[0:len(data)-len(data)%batch_size]
-
     return np.array(data)
 
 
 # since we are using stateful rnn tsteps can be set to 1
 tsteps = 1
 batch_size = 100
-epochs = 1000
+epochs = 100
 inner = 1000
+learning_rate = .001
 
 
 print('Generating Data')
 data = gen_data(instream, batch_size)
 data2 = gen_data(instream2, batch_size)
+
 
 lastrow = np.array(((0,0,0),))
 summed_data = list()
@@ -188,13 +184,13 @@ lstm_model.add(merged)
 
 lstm_model.add(TimeDistributed(Dense(200, activation='tanh'), batch_input_shape=(batch_size, tsteps, 3)))
 
+lstm_model.add(Dropout(0.2))
 
 lstm_model.add(LSTM(inner,
                batch_input_shape=(batch_size, tsteps, 3),
                return_sequences=True,
                activation='tanh',
                stateful=True))
-lstm_model.add(Dropout(0.2))
 lstm_model.add(LSTM(inner,
                batch_input_shape=(batch_size, tsteps, 3),
                return_sequences=True,
@@ -208,7 +204,7 @@ lstm_model.add(LSTM(inner,
                stateful=True))
 lstm_model.add(Dense(3))
 
-lstm_model.compile(loss='mean_squared_error', optimizer=keras.optimizers.RMSprop(lr=.001))
+lstm_model.compile(loss='mean_squared_error', optimizer=keras.optimizers.RMSprop(lr=learning_rate))
 
 lstm_model.summary()
 
@@ -243,7 +239,7 @@ lastrow = np.array([0,0,0])
 summed_prediction = list()
 
 for row in predicted_output:
-    lastrow = np.add(np.append((abs(row[0]), row[1], row[2])),lastrow)
+    lastrow = np.add(np.array((math.exp(row[0]), row[1], row[2])),lastrow)
     summed_prediction.append(list(lastrow))
 
 summed_prediction = np.array(summed_prediction)

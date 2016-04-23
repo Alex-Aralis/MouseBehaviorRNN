@@ -17,15 +17,6 @@ from keras.layers import Input, Embedding, Merge
 import csv
 import keras
 
-infile = open('datasets/newinput.csv', 'r')
-infile2 = open('datasets/set2.csv', 'r')
-
-instream = csv.reader(infile)
-instream2 = csv.reader(infile2)
-
-#for row in instream:
-#    print(row)
-
 def gen_data(instream, batch_size):
 
     raw_data = []
@@ -43,16 +34,17 @@ def exp_result(data):
     for row in data:
         row[0] = math.exp(row[0])
 
-    
+    return data
 
     
 def gen_datas(paths, batch_size):
-    datas = [];
+    datas = []
+
     for path in paths:
         instream = csv.reader(open(path, 'r'))
-        datas.append(gen_data(instream, batch_size)
+        datas.append(gen_data(instream, batch_size))
 
-    return datas;
+    return datas
 
 def sum_series_data(data):
     lastrow = np.array(((0,0,0),))
@@ -69,7 +61,7 @@ def sum_result_data(data):
     summed = []
 
     for row in data:
-        lastrow = np.add(np.array((row,lastrow)
+        lastrow = np.add(row,lastrow)
         summed.append(list(lastrow))
     
     return np.array(summed)
@@ -87,13 +79,13 @@ def create_expected(data):
 # since we are using stateful rnn tsteps can be set to 1
 tsteps = 1
 batch_size = 100
-epochs = 100
-inner = 1000
+epochs = 5
+inner = 50
 learning_rate = .001
 
 
 print('Generating Data')
-data1, data2, data3 = get_datas(('datasets/set1.csv', 'datasets/set2.csv', 'datasets/set3.csv'), batch_size)
+data1, data2, data3 = gen_datas(('datasets/set1.csv', 'datasets/set2.csv', 'datasets/set3.csv'), batch_size)
 
 
 summed_data = sum_series_data(data2)
@@ -111,10 +103,10 @@ expected1 = create_expected(data1)
 expected2 = create_expected(data2)
 
 
-print('Input shape:',data.shape)
+print('Input shape:',data1.shape)
 
 print('Output shape')
-print(expected.shape)
+print(expected1.shape)
 
 print('Creating Model')
 
